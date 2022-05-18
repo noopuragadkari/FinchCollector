@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Finch
+from .models import Finch, Toy
 from .forms import FeedingForm
 import logging 
 logging.basicConfig(level=logging.DEBUG)
@@ -34,7 +34,8 @@ def finches_index(request):
 
 def finches_detail(request, finch_id):
   finch = Finch.objects.get(id=finch_id)
-  return render(request, 'finches/detail.html', { 'finch': finch, 'feeding_form': FeedingForm })
+  toys_finch_doesnt_have = Toy.objects.exclude(id__in = finch.toys.all().values_list('id'))
+  return render(request, 'finches/detail.html', { 'finch': finch, 'feeding_form': FeedingForm, 'toys' : toys_finch_doesnt_have })
 
 
 def add_feeding(request, finch_id):
@@ -44,6 +45,10 @@ def add_feeding(request, finch_id):
         new_feeding.finch_id = finch_id
         new_feeding.save()
     return redirect('detail', finch_id=finch_id)
+
+def assoc_toy(request, finch_id, toy_id):
+  Finch.objects.get(id=finch_id).toys.add(toy_id)
+  return redirect('detail', finch_id=finch_id)
 
 class FinchCreate(CreateView):
   model = Finch
