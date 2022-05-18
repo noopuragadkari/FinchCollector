@@ -22,7 +22,7 @@ class Finch(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=250)
     lifespan = models.IntegerField()
-    toys = models.ManyToManyField(Toy)
+    toys = models.ManyToManyField(Toy,blank=True)
 
     def __str__(self):
         return self.name
