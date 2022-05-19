@@ -16,6 +16,12 @@
             <a href="{% url 'finches_update' finch.id %}">Edit</a>
             <a href="{% url 'finches_delete' finch.id %}">Delete</a>
         </div>
+        {% for photo in finch.photo_set.all %}
+          <img class="responsive-img card-panel" src="{{photo.url}}">
+        {% empty %}
+          <div class="card-panel teal-text center-align">No Photos Uploaded</div>
+        {% endfor %}
+        
     </div>
   </div>
   <div class="col s6">
